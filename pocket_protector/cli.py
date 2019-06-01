@@ -66,8 +66,16 @@ def _get_new_creds(confirm_pass=True):
 
 def _get_pass(confirm_pass=False, label='Passphrase', label2='Retype passphrase'):
     passphrase = getpass.getpass('%s: ' % label)
+    try:
+        passphrase = passphrase.decode(sys.stdin.encoding.encode('UTF-8'))
+    except (TypeError, AttributeError):
+        passphrase = passphrase.encode('UTF-8')
     if confirm_pass:
         passphrase2 = getpass.getpass('%s: ' % label2)
+        try:
+            passphrase2 = passphrase2.decode(sys.stdin.encoding.encode('UTF-8'))
+        except (TypeError, AttributeError):
+            passphrase2 = passphrase2.encode('UTF-8')
         if passphrase != passphrase2:
             print('Sorry, passphrases did not match.')
             sys.exit(1)
